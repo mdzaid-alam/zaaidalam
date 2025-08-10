@@ -1,0 +1,57 @@
+# ========================================
+# ROBOTS.TXT - PREVENT SEARCH ENGINE INDEXING
+# ========================================
+
+# Disallow all robots from accessing the entire site
+User-agent: *
+Disallow: /
+
+# Block specific search engines
+User-agent: Googlebot
+Disallow: /
+
+User-agent: Bingbot
+Disallow: /
+
+User-agent: Slurp
+Disallow: /
+
+User-agent: DuckDuckBot
+Disallow: /
+
+User-agent: Baiduspider
+Disallow: /
+
+User-agent: YandexBot
+Disallow: /
+
+User-agent: facebookexternalhit
+Disallow: /
+
+User-agent: Twitterbot
+Disallow: /
+
+User-agent: LinkedInBot
+Disallow: /
+
+# Block archive.org
+User-agent: ia_archiver
+Disallow: /
+
+# Block all crawlers
+User-agent: *
+Crawl-delay: 86400
+
+# Prevent access to all files
+Disallow: /css/
+Disallow: /js/
+Disallow: /images/
+Disallow: /pdf/
+Disallow: /*.pdf
+Disallow: /*.jpg
+Disallow: /*.jpeg
+Disallow: /*.png
+Disallow: /*.gif
+Disallow: /*.css
+Disallow: /*.js
+Disallow: /*.html

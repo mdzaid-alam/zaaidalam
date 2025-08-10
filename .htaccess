@@ -1,0 +1,78 @@
+# ========================================
+# WEBSITE SECURITY PROTECTION
+# ========================================
+
+# Disable directory browsing
+Options -Indexes
+
+# Prevent access to sensitive files
+<Files ~ "\.(htaccess|htpasswd|ini|log|sh|sql|conf)$">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Prevent access to backup files
+<Files ~ "\.(bak|backup|old|tmp|temp)$">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Security Headers
+<IfModule mod_headers.c>
+    # Prevent clickjacking
+    Header always append X-Frame-Options DENY
+    
+    # Prevent MIME type sniffing
+    Header always set X-Content-Type-Options nosniff
+    
+    # Enable XSS protection
+    Header always set X-XSS-Protection "1; mode=block"
+    
+    # Prevent referrer leakage
+    Header always set Referrer-Policy "no-referrer"
+    
+    # Content Security Policy
+    Header always set Content-Security-Policy "default-src 'self' https: data: 'unsafe-inline' 'unsafe-eval'; img-src 'self' https: data:; font-src 'self' https: data:;"
+    
+    # Disable caching for sensitive pages
+    Header always set Cache-Control "no-cache, no-store, must-revalidate"
+    Header always set Pragma "no-cache"
+    Header always set Expires "0"
+</IfModule>
+
+# Prevent hotlinking of images
+RewriteEngine On
+RewriteCond %{HTTP_REFERER} !^$
+RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?yourdomain.com [NC]
+RewriteRule \.(jpg|jpeg|png|gif|pdf)$ - [NC,F,L]
+
+# Block bad bots
+RewriteCond %{HTTP_USER_AGENT} ^$ [OR]
+RewriteCond %{HTTP_USER_AGENT} ^(java|curl|wget).* [NC,OR]
+RewriteCond %{HTTP_USER_AGENT} ^.*(libwww-perl|curl|wget|python|nikto|scan).* [NC,OR]
+RewriteCond %{HTTP_USER_AGENT} ^.*(winhttp|HTTrack|clshttp|archiver|loader|email|harvest|extract|grab|miner).* [NC]
+RewriteRule .* - [F,L]
+
+# Block access to hidden files
+<Files .*>
+    Order Deny,Allow
+    Deny From All
+</Files>
+
+# Allow access to specific file types
+<FilesMatch "\.(html|css|js|png|jpg|jpeg|gif|ico|pdf|svg|woff|woff2|ttf|eot)$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
+
+# Disable server signature
+ServerSignature Off
+
+# Protect against common attacks
+<IfModule mod_rewrite.c>
+    # Block access to sensitive directories
+    RewriteRule ^(wp-admin|admin|administrator|backup|config|database|db|includes|lib|logs|temp|tmp)/ - [F,L]
+    
+    # Block access to common attack files
+    RewriteRule \.(php|asp|aspx|jsp|cgi|pl|py|sh|exe|bat|cmd)$ - [F,L]
+</IfModule>
